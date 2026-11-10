@@ -1,0 +1,4 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}{{ titulo }} · BuildCorp{% endblock %}
+{% block content %}<section class="card form-card"><h1>{{ titulo }}</h1>{% if arriendo %}<div class="notice">Arriendo #{{ arriendo.pk }} · {{ arriendo.maquinaria }} · {{ arriendo.responsable }}</div>{% endif %}<p>{{ nota }}</p><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Confirmar</button></form><p><a href="{% url 'arriendos' %}">Volver a arriendos</a></p></section>{% endblock %}
+

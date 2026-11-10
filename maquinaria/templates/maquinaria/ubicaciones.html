@@ -1,0 +1,25 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Bodegas y antecedentes · BuildCorp<details class="mt-4"><summary>Consultar obras anteriores</summary><section class="card"><h2>Obras · antecedentes anteriores</h2><p>Los nuevos arriendos utilizan dirección y comuna propias; no necesitan registrar una obra.</p>
+{% for obra in obras %}<article class="evento"><h3>{{ obra.nombre }}</h3><p>Estado: <strong>{% if obra.activa %}Activa{% else %}Inactiva{% endif %}</strong></p><p>{{ obra.direccion }}</p><div class="actions">
+
+<a href="{% url 'historial_ubicacion' 'obra' obra.pk %}">Ver historial</a>
+{% if obra.activa %}{% if perms.maquinaria.desactivar_obra %}<a href="{% url 'actividad_ubicacion' 'obra' obra.pk 'desactivar' %}">Desactivar obra</a>{% endif %}{% elif es_administrador and perms.maquinaria.reactivar_obra %}<a href="{% url 'actividad_ubicacion' 'obra' obra.pk 'reactivar' %}">Reactivar obra</a>{% endif %}
+</div></article>{% empty %}<p>No hay obras con el estado seleccionado.</p>{% endfor %}</section>
+</details>{% endblock %}
+{% block content %}
+<h1>Bodegas</h1><p><a href="{% url 'catalogo' %}">Volver al catálogo</a></p>
+<section class="card"><form method="get" class="filtros">{{ form.as_p }}<button class="btn btn-primary" type="submit">Filtrar</button></form><p class="muted">Las ubicaciones inactivas conservan sus antecedentes y no admiten nuevas operaciones.</p></section>
+<section class="card"><h2>Bodegas</h2>{% if perms.maquinaria.add_bodega %}<a class="btn btn-primary" href="{% url 'nueva_ubicacion' 'bodega' %}">Registrar bodega</a>{% endif %}
+{% for bodega in bodegas %}<article class="evento"><h3>{{ bodega.nombre }}</h3><p>Estado: <strong>{% if bodega.activa %}Activa{% else %}Inactiva{% endif %}</strong></p><p>Dirección: {{ bodega.direccion|default:'Sin registrar' }}</p><p>{% if bodega.obra %}Obra asociada: {{ bodega.obra }}{% if not bodega.obra.activa %} (inactiva){% endif %}{% else %}Bodega de empresa, sin obra asociada.{% endif %}</p><div class="actions">
+{% if perms.maquinaria.change_bodega %}<a href="{% url 'editar_ubicacion' 'bodega' bodega.pk %}">Editar bodega</a>{% endif %}
+<a href="{% url 'historial_ubicacion' 'bodega' bodega.pk %}">Ver historial</a>
+{% if bodega.activa %}{% if perms.maquinaria.desactivar_bodega %}<a href="{% url 'actividad_ubicacion' 'bodega' bodega.pk 'desactivar' %}">Desactivar bodega</a>{% endif %}{% elif es_administrador and perms.maquinaria.reactivar_bodega %}<a href="{% url 'actividad_ubicacion' 'bodega' bodega.pk 'reactivar' %}">Reactivar bodega</a>{% endif %}
+</div></article>{% empty %}<p>No hay bodegas con el estado seleccionado. Puedes crear una bodega de empresa sin asociarla a una obra.</p>{% endfor %}</section>
+<details class="mt-4"><summary>Consultar obras anteriores</summary><section class="card"><h2>Obras · antecedentes anteriores</h2><p>Los nuevos arriendos utilizan dirección y comuna propias; no necesitan registrar una obra.</p>
+{% for obra in obras %}<article class="evento"><h3>{{ obra.nombre }}</h3><p>Estado: <strong>{% if obra.activa %}Activa{% else %}Inactiva{% endif %}</strong></p><p>{{ obra.direccion }}</p><div class="actions">
+
+<a href="{% url 'historial_ubicacion' 'obra' obra.pk %}">Ver historial</a>
+{% if obra.activa %}{% if perms.maquinaria.desactivar_obra %}<a href="{% url 'actividad_ubicacion' 'obra' obra.pk 'desactivar' %}">Desactivar obra</a>{% endif %}{% elif es_administrador and perms.maquinaria.reactivar_obra %}<a href="{% url 'actividad_ubicacion' 'obra' obra.pk 'reactivar' %}">Reactivar obra</a>{% endif %}
+</div></article>{% empty %}<p>No hay obras con el estado seleccionado.</p>{% endfor %}</section>
+</details>{% endblock %}
+

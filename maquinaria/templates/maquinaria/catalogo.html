@@ -1,0 +1,14 @@
+{% extends 'maquinaria/base.html' %}
+{% load maquinaria_extras %}
+{% block title %}Catálogo de maquinaria · BuildCorp{% endblock %}
+{% block content %}
+<h1>Catálogo de maquinaria</h1>
+<div class="actions">{% if perms.maquinaria.add_maquinaria %}<a class="btn btn-primary" href="{% url 'nueva_maquinaria' %}">Registrar maquinaria</a>{% endif %}<a href="{% url 'ubicaciones' %}">Bodegas y antecedentes</a></div>
+<section class="card"><form method="get" class="filtros">{{ form.as_p }}<button class="btn btn-primary" type="submit">Buscar</button><a href="{% url 'catalogo' %}">Limpiar filtros</a></form></section>
+<p>{{ pagina.paginator.count }} equipo{{ pagina.paginator.count|pluralize:'s' }} encontrado{{ pagina.paginator.count|pluralize:'s' }}.</p>
+<div class="equipos">{% for maquina in pagina %}<article class="card"><p class="muted">{{ maquina.codigo }}</p><h2><a href="{% url 'detalle_maquinaria' maquina.pk %}">{{ maquina.nombre }}</a></h2><p><strong>{{ maquina.get_estado_display }}</strong></p><p>{{ maquina.marca }} {{ maquina.modelo }}</p>{% if maquina.precio_diario != None %}<p>Precio diario: <strong>${{ maquina.precio_diario|floatformat:2 }} CLP</strong></p>{% else %}<p class="text-muted">Precio pendiente de definir.</p>{% endif %}{% if maquina.reserva_vigente %}<p class="badge text-bg-warning">Reservada para entrega</p>{% elif user.rol == 'CONTRATISTA' and not user.is_staff and not user.is_superuser and maquina.estado == 'DISPONIBLE' and maquina.precio_diario != None %}<p><a class="btn btn-primary" href="{% url 'nueva_peticion' maquina.pk %}">Solicitar arriendo</a></p>{% endif %}<p>Bodega: {{ maquina.bodega }}</p><p>Uso total: {{ maquina.tiempo_uso_total|horas }} h</p>{% if maquina.bloqueada_por_mantencion %}<p class="muted">Revisión pendiente antes de arrendar.</p>{% endif %}</article>{% empty %}<section class="card"><p>No hay maquinaria para esta búsqueda.</p>{% if perms.maquinaria.add_maquinaria %}<p>Registra primero una bodega si aún no existe. Asociarla a una obra es opcional.</p>{% endif %}</section>{% endfor %}</div>
+{% if pagina.has_other_pages %}<nav aria-label="Páginas del catálogo" class="actions">{% if pagina.has_previous %}<a href="?{{ filtros }}&amp;page={{ pagina.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>{% if pagina.has_next %}<a href="?{{ filtros }}&amp;page={{ pagina.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+{% endblock %}
+
+
+

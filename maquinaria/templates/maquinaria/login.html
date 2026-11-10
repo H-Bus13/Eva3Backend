@@ -1,0 +1,5 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Ingresar · BuildCorp{% endblock %}
+{% block content %}<section class="card form-card"><h1>Ingresa a BuildCorp</h1><p>Si tu cuenta está pendiente o fue rechazada, podrás consultar su estado y el motivo ingresando con tus credenciales.</p><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button class="btn btn-primary" type="submit">Ingresar</button></form><p><a href="{% url 'registro' %}">Solicitar una cuenta de contratista</a></p></section>{% endblock %}
+
+

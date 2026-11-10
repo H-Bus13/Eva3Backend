@@ -1,0 +1,35 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}BuildCorp{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'maquinaria/buildcorp.css' %}">
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" defer></script>
+</head>
+<body>
+<a class="visually-hidden-focusable" href="#contenido">Ir al contenido</a>
+<nav class="navbar navbar-expand-xl navbar-dark bc-navbar sticky-top" aria-label="Navegación principal"><div class="container-fluid px-lg-4">
+<a class="navbar-brand fw-bold" href="{% url 'inicio' %}"><span class="bc-brand-mark" aria-hidden="true">B</span> BuildCorp</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Mostrar menú"><span class="navbar-toggler-icon"></span></button>
+<div class="collapse navbar-collapse" id="menuPrincipal"><ul class="navbar-nav me-auto mb-2 mb-xl-0">
+{% if user.is_authenticated %}
+<li class="nav-item"><a class="nav-link" href="{% url 'inicio' %}">Inicio</a></li><li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Maquinaria</a></li><li class="nav-item"><a class="nav-link" href="{% url 'arriendos' %}">Arriendos</a></li><li class="nav-item"><a class="nav-link" href="{% url 'peticiones' %}">{% if perms.maquinaria.gestionar_arriendos %}Revisar arriendos{% else %}Mis solicitudes{% endif %}</a></li><li class="nav-item"><a class="nav-link" href="{% url 'alertas_atraso' %}">Alertas</a></li>
+{% if perms.maquinaria.view_mantenimiento %}<li class="nav-item"><a class="nav-link" href="{% url 'mantenciones' %}">Mantenciones</a></li>{% endif %}
+{% if perms.maquinaria.gestionar_usuarios %}<li class="nav-item"><a class="nav-link" href="{% url 'usuarios' %}">Usuarios</a></li>{% endif %}
+{% if perms.maquinaria.aprobar_contratista %}<li class="nav-item"><a class="nav-link" href="{% url 'pendientes' %}">Solicitudes de cuenta</a></li>{% endif %}
+{% if perms.maquinaria.publicar_terminos %}<li class="nav-item"><a class="nav-link" href="{% url 'publicar_terminos' %}">Condiciones</a></li>{% endif %}
+</ul><div class="d-flex gap-2 align-items-center flex-wrap"><a class="btn btn-sm btn-outline-light" href="{% url 'perfil' %}">Mi perfil</a><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" class="btn btn-sm btn-light">Cerrar sesión</button></form></div>
+{% elif solo_solicitud %}<li class="nav-item"><span class="nav-link">Consulta de solicitud</span></li></ul><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" class="btn btn-outline-light">Cerrar consulta</button></form>
+{% else %}<li class="nav-item"><span class="nav-link">Arriendo y control de maquinaria</span></li></ul><div class="d-flex gap-2"><a class="btn btn-outline-light" href="{% url 'login' %}">Ingresar</a><a class="btn btn-light" href="{% url 'registro' %}">Registrarse</a></div>{% endif %}
+</div></div></nav>
+<div class="bc-context"><div class="container-xl"><span class="bc-eyebrow">GESTIÓN DE EQUIPOS Y OBRAS</span>{% if user.is_authenticated %}<span class="small">{{ user.get_full_name|default:user.username }}{% if user.is_superuser %} · Superusuario{% endif %}</span>{% endif %}</div></div>
+<main class="container-xl py-4 py-lg-5" id="contenido">
+{% for message in messages %}<div class="alert {% if message.level >= 40 %}alert-danger{% elif message.level >= 30 %}alert-warning{% elif message.level >= 25 %}alert-success{% else %}alert-info{% endif %}" role="{% if message.level >= 30 %}alert{% else %}status{% endif %}">{{ message }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</main>
+<footer class="container-xl py-4 bc-footer"><span class="fw-semibold">BuildCorp</span><span>Inventario, trazabilidad y arriendos</span></footer>
+{% include 'maquinaria/visor_firma.html' %}
+<script src="{% static 'maquinaria/visor-firma.js' %}" defer></script>
+</body></html>

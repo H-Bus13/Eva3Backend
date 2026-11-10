@@ -1,0 +1,4 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Bloqueo manual de empresa · BuildCorp{% endblock %}
+{% block content %}<section class="card form-card"><h1>{% if accion == 'bloquear' %}Aplicar{% else %}Retirar{% endif %} bloqueo manual</h1><div class="notice"><strong>{{ empresa }}</strong></div><p>Esta acción no elimina ni reemplaza un bloqueo automático por atraso. El motivo se conservará en el historial y será visible a los integrantes de la empresa.</p><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Confirmar cambio</button></form><p><a href="{% url 'detalle_bloqueo_empresa' empresa.pk %}">Cancelar</a></p></section>{% endblock %}
+

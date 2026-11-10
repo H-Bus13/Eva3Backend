@@ -1,0 +1,5 @@
+<div class="destino-uso"><p>Dirección de uso: <strong>{{ destino.direccion_uso|default:'Sin dirección registrada' }}</strong></p>
+<p>Comuna: {{ destino.comuna_uso|default:'Sin registrar' }}</p>
+{% if destino.indicaciones_acceso %}<p>Indicaciones de acceso:</p>{{ destino.indicaciones_acceso|linebreaksbr }}{% endif %}
+{% if destino.destino_legacy %}<p class="text-muted">Antecedente histórico: dirección copiada de la obra asociada. La comuna no estaba registrada.</p>{% endif %}
+{% if destino.obra_destino_id %}<p class="text-muted">Obra de origen (antecedente): {{ destino.obra_destino }}</p>{% endif %}</div>

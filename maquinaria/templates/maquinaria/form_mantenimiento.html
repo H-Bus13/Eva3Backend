@@ -1,0 +1,4 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}{{ titulo }} · BuildCorp{% endblock %}
+{% block content %}<section class="card form-card"><h1>{{ titulo }}</h1>{% if orden %}<div class="notice">Mantención #{{ orden.pk }} · <strong>{{ orden.maquinaria }}</strong><p>{{ orden.descripcion }}</p></div>{% endif %}{% if programando %}<p>Una fecha futura registra la tarea sin cambiar inmediatamente la disponibilidad. Al llegar la fecha, se considerará una revisión exigible.</p>{% else %}<p>El resultado de la revisión se conservará en el historial. Las horas totales de la máquina no se reinician.</p>{% endif %}<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Confirmar</button></form><p><a href="{% url 'catalogo' %}">Cancelar y volver al catálogo</a></p></section>{% endblock %}
+

@@ -1,0 +1,10 @@
+[Unit]
+Description=Revisar atrasos cada cinco minutos
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=buildcorp-atrasos.service
+
+[Install]
+WantedBy=timers.target

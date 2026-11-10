@@ -1,0 +1,19 @@
+[Unit]
+Description=Aplicacion BuildCorp
+After=network.target postgresql.service
+
+[Service]
+User=buildcorp
+Group=www-data
+WorkingDirectory=/srv/buildcorp
+EnvironmentFile=/etc/buildcorp.env
+RuntimeDirectory=buildcorp
+RuntimeDirectoryMode=0750
+UMask=0027
+ExecStart=/srv/buildcorp/env/bin/gunicorn drf.wsgi:application --workers 2 --bind unix:/run/buildcorp/app.sock --umask 007 --access-logfile - --error-logfile -
+Restart=on-failure
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

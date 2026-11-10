@@ -1,0 +1,16 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Publicar condiciones · BuildCorp{% endblock %}
+{% block content %}
+<section class="card"><h1>Publicar términos y condiciones</h1><p>Revisa el texto antes de publicarlo. Esta acción crea una versión nueva y exige una nueva aceptación a los usuarios. Las versiones anteriores se conservan.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Publicar nueva versión</button></form>
+<details><summary>Ejemplo académico para preparar el texto</summary><p>Este ejemplo no está publicado. Adáptalo a las condiciones de tu proyecto antes de usarlo.</p><div class="condiciones">1. La maquinaria será entregada únicamente a una persona autorizada por la empresa contratista.
+2. El responsable se compromete a utilizar el equipo para su finalidad, respetar las instrucciones de operación y no cederlo a terceros sin autorización.
+3. La entrega y devolución deben registrar el estado del equipo y la firma del responsable.
+4. Las fallas, daños o pérdidas deben informarse a la empresa de arriendo. El equipo no debe seguir utilizándose si presenta una condición insegura.
+5. El plazo, la tarifa y cualquier garantía acordada deben quedar especificados en el arriendo antes de su confirmación.
+6. Los atrasos y problemas de devolución pueden impedir nuevos arriendos de la empresa contratista mientras se revisa la situación.
+7. El sistema conservará la versión aceptada, las fechas y el trazo de firma como comprobante del proceso.</div></details>
+</section>
+<section class="card"><h2>Versiones publicadas</h2>{% for item in versiones %}<details><summary>Versión {{ item.version }} · {{ item.publicado_en|date:'d/m/Y H:i' }}</summary><p>Publicada por: {{ item.publicado_por|default:'Sin registro previo' }}</p><div class="condiciones">{{ item.contenido|linebreaksbr }}</div></details>{% empty %}<p>No hay versiones publicadas.</p>{% endfor %}</section>
+{% endblock %}
+

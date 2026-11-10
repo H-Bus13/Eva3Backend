@@ -1,0 +1,8 @@
+{% extends 'maquinaria/base.html' %}
+{% load static %}
+{% block title %}Solicitudes pendientes · BuildCorp{% endblock %}
+{% block content %}<h1>Solicitudes pendientes</h1><p>Comprueba por un medio externo que la persona está autorizada por la empresa. Conocer su RUT no acredita esa relación.</p>{% for cuenta in cuentas %}<article class="card"><h2>{{ cuenta.get_full_name|default:cuenta.username }}</h2><p>Usuario: {{ cuenta.username }} · RUT: {{ cuenta.rut }}</p><p>Correo: {{ cuenta.email }}</p><p>Empresa: {{ cuenta.empresa|default:'Sin empresa asociada' }}</p>{% if cuenta.empresa.tiene_bloqueo %}<p class="notice">La empresa está bloqueada. Aprobar la cuenta no levanta ese bloqueo.</p>{% endif %}<form class="form-revision" method="post" action="{% url 'revisar_cuenta' cuenta.pk %}">{% csrf_token %}<label for="motivo-{{ cuenta.pk }}">Observaciones (obligatorias para rechazar)</label><textarea name="motivo" id="motivo-{{ cuenta.pk }}" maxlength="1000"></textarea><div class="actions"><button class="btn btn-primary" name="accion" value="aprobar">Aprobar cuenta</button><button class="btn btn-primary" name="accion" value="rechazar">Rechazar solicitud</button></div></form><details><summary>Historial de la solicitud</summary>{% include 'maquinaria/historial_solicitud.html' with historial=cuenta.historial_solicitud.all %}</details></article>{% empty %}<section class="card">No hay solicitudes pendientes.</section>{% endfor %}<script src="{% static 'maquinaria/revision-cuentas.js' %}" defer></script>{% endblock %}
+
+
+
+

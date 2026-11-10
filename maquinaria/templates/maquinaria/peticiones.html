@@ -1,0 +1,7 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Solicitudes de arriendo · BuildCorp{% endblock %}
+{% block content %}<h1>{% if perms.maquinaria.gestionar_arriendos %}Revisar solicitudes de arriendo{% else %}Mis solicitudes de arriendo{% endif %}</h1>
+<form method="get" class="card"><label for="estado">Estado</label><select name="estado" id="estado" class="form-select"><option value="">Todos</option>{% for valor, texto in estados %}<option value="{{ valor }}" {% if estado == valor %}selected{% endif %}>{{ texto }}</option>{% endfor %}</select><button class="btn btn-primary">Filtrar</button></form>
+{% for solicitud in pagina %}<article class="card"><h2><a href="{% url 'detalle_peticion' solicitud.pk %}">Solicitud #{{ solicitud.pk }} · {{ solicitud.maquinaria.nombre }}</a></h2><p>{% if solicitud.estado_actual == 'VENCIDA' %}Reserva vencida{% else %}{{ solicitud.get_estado_display }}{% endif %} · {{ solicitud.solicitante }} · ${{ solicitud.precio_diario_acordado|floatformat:2 }} CLP/día</p><p>Devolución: {{ solicitud.devolucion_prevista|date:'d/m/Y H:i' }}</p></article>{% empty %}<p>No hay solicitudes.</p>{% endfor %}
+{% if pagina.has_previous %}<a href="?estado={{ estado }}&page={{ pagina.previous_page_number }}">Anterior</a>{% endif %} <span>Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span> {% if pagina.has_next %}<a href="?estado={{ estado }}&page={{ pagina.next_page_number }}">Siguiente</a>{% endif %}
+{% endblock %}

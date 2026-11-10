@@ -1,0 +1,4 @@
+{% for evento in historial %}
+<article><h3>{{ evento.get_tipo_display }} · {{ evento.fecha|date:'d/m/Y H:i' }}</h3><p>Empresa: {{ evento.empresa }}</p><p>Registrado por: {{ evento.registrado_por.get_full_name|default:evento.registrado_por.username }}</p>{% if evento.motivo %}<p>{{ evento.motivo|linebreaksbr }}</p>{% endif %}</article>
+{% empty %}<p>Todavía no hay revisiones registradas en el historial.</p>{% endfor %}
+

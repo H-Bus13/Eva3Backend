@@ -1,0 +1,4 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Comprobante de aceptación · BuildCorp{% endblock %}
+{% block content %}<article class="card"><h1>Comprobante de aceptación</h1><p>Responsable: {{ comprobante.usuario.get_full_name|default:comprobante.usuario.username }} · RUT: {{ comprobante.usuario.rut }}</p><p>Versión: <strong>{{ comprobante.terminos.version }}</strong></p><p>Aceptada el {{ comprobante.aceptado_en|date:'d/m/Y H:i:s' }} · Firmada el {{ comprobante.firmado_en|date:'d/m/Y H:i:s' }}</p><h2>Texto aceptado</h2><div class="condiciones">{{ comprobante.terminos.contenido|linebreaksbr }}</div><h2>Firma registrada</h2><a href="{% url 'ver_firma' comprobante.pk %}" data-firma-preview aria-label="Ampliar firma"><img class="firma-registrada" src="{% url 'ver_firma' comprobante.pk %}" alt="Trazo de firma registrado por el responsable"></a><p><a href="{% url 'perfil' %}">Volver a mi perfil</a></p></article>{% endblock %}
+

@@ -1,0 +1,13 @@
+[Unit]
+Description=Revision automatica de atrasos BuildCorp
+After=postgresql.service
+
+[Service]
+Type=oneshot
+User=buildcorp
+Group=www-data
+WorkingDirectory=/srv/buildcorp
+EnvironmentFile=/etc/buildcorp.env
+ExecStart=/srv/buildcorp/env/bin/python manage.py revisar_atrasos
+ExecStart=/srv/buildcorp/env/bin/python manage.py vencer_reservas
+NoNewPrivileges=true

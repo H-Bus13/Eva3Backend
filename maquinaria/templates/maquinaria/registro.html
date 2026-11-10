@@ -1,0 +1,16 @@
+{% extends 'maquinaria/base.html' %}
+{% load static %}
+{% block title %}Registro de contratista · BuildCorp{% endblock %}
+{% block content %}<section class="card form-card"><h1>Solicita tu cuenta</h1>
+<p>Registra tus datos y los de tu empresa. Un administrador verificará tu vínculo antes de habilitar el acceso.</p>
+<form method="post" novalidate>{% csrf_token %}
+{% if form.errors %}<div class="alert alert-danger" role="alert" tabindex="-1" data-resumen-errores>
+<h2 class="fs-6">No se pudo enviar la solicitud. Revisa los siguientes datos:</h2>
+<ul class="mb-0">{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+{% for campo in form %}{% for error in campo.errors %}<li><a class="alert-link" href="#{{ campo.id_for_label }}">{{ campo.label }}: {{ error }}</a></li>{% endfor %}{% endfor %}</ul>
+</div>{% endif %}
+{% for campo in form %}<div class="mb-3">{{ campo.label_tag }}{% if campo.field.required %}<span class="text-secondary small"> (obligatorio)</span>{% endif %}
+{{ campo }}{% if campo.help_text %}<div class="helptext" id="{{ campo.auto_id }}_helptext">{{ campo.help_text|safe }}</div>{% endif %}{{ campo.errors }}</div>{% endfor %}
+<button class="btn btn-primary" type="submit">Enviar solicitud</button></form>
+<p class="muted">Después de la aprobación podrás aceptar las condiciones y registrar tu firma desde Mi perfil.</p></section>
+<script src="{% static 'maquinaria/registro.js' %}" defer></script>{% endblock %}

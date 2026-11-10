@@ -1,0 +1,34 @@
+{% extends 'maquinaria/base.html' %}
+{% load static %}
+{% block title %}Mi perfil · BuildCorp{% endblock %}
+{% block content %}{% include 'maquinaria/aviso_bloqueo_empresa.html' %}
+<section class="card"><h1>Mi perfil</h1><p><strong>{{ user.get_full_name|default:user.username }}</strong></p><p>RUT: {{ user.rut }} · Correo: {{ user.email|default:'Sin correo' }}</p><p>Rol: {% if user.is_superuser %}Superusuario{% else %}{{ user.get_rol_display }}{% endif %}</p>{% if perfil_contratista %}<p>Empresa: {{ user.empresa|default:'Sin empresa asociada' }}</p>{% endif %}</section>
+{% if perfil_contratista %}
+<section class="card"><h2>Condiciones y firma</h2>
+{% if terminos %}
+<p>Versión vigente: <strong>{{ terminos.version }}</strong> · Publicada el {{ terminos.publicado_en|date:'d/m/Y H:i' }}</p>
+<div class="condiciones" tabindex="0" aria-label="Texto completo de las condiciones">{{ terminos.contenido|linebreaksbr }}</div>
+{% if comprobante %}
+<div class="notice">Ya aceptaste y firmaste esta versión. <a href="{% url 'ver_comprobante' comprobante.pk %}">Consultar comprobante</a></div>
+{% elif puede_firmar %}
+<p>Condiciones aceptadas. Dibuja tu firma para completar el registro. Dispones de 30 minutos desde la aceptación.</p>
+<form method="post" action="{% url 'guardar_firma' %}" enctype="multipart/form-data" id="form-firma">{% csrf_token %}
+<canvas id="firma" width="900" height="300" aria-label="Espacio para dibujar tu firma" aria-describedby="ayuda-firma"></canvas>
+<p class="muted" id="ayuda-firma">Firma con el mouse, un lápiz táctil o tu dedo. Se guardará el trazo como imagen.</p>
+<input type="file" name="firma" id="archivo-firma" hidden>
+<div class="actions"><button class="btn btn-primary" type="button" id="limpiar-firma">Limpiar firma</button><button class="btn btn-primary" type="submit" id="guardar-firma">Guardar firma y aceptación</button></div>
+<p id="error-firma" role="alert"></p><noscript>Necesitas habilitar JavaScript para dibujar y guardar la firma.</noscript>
+</form>
+<script src="{% static 'maquinaria/firma.js' %}" defer></script>
+{% else %}
+<p>Para continuar debes aceptar las condiciones y después registrar tu firma.</p>
+<form method="post" action="{% url 'aceptar_terminos' %}">{% csrf_token %}<input type="hidden" name="version_id" value="{{ terminos.pk }}">
+<label class="casilla"><input type="checkbox" name="acepto" value="si" required> He leído y acepto esta versión de los términos y condiciones.</label><button class="btn btn-primary" type="submit">Aceptar y continuar a la firma</button></form>
+{% endif %}
+{% else %}<p>Todavía no hay condiciones publicadas. La administración debe publicarlas antes de que puedas completar este requisito.</p>{% endif %}
+</section>
+<section class="card"><h2>Mis comprobantes</h2><p class="muted">Cada comprobante conserva el texto que aceptaste. Una versión nueva requiere una nueva aceptación y firma.</p>{% for item in historial %}<p><a href="{% url 'ver_comprobante' item.pk %}">Versión {{ item.terminos.version }}</a> · Firmada el {{ item.firmado_en|date:'d/m/Y H:i' }}</p>{% empty %}<p>No tienes comprobantes registrados.</p>{% endfor %}</section>
+{% endif %}
+{% endblock %}
+
+

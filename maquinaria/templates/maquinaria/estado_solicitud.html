@@ -1,0 +1,17 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Estado de mi solicitud · BuildCorp{% endblock %}
+{% block content %}
+<section class="card"><h1>Estado de mi solicitud</h1><p><strong>{{ solicitante.get_full_name|default:solicitante.username }}</strong> · RUT: {{ solicitante.rut }}</p><p>Empresa solicitada: {{ solicitante.empresa|default:'Sin empresa asociada' }}</p><p>Estado: <strong>{{ solicitante.get_estado_aprobacion_display }}</strong></p>
+{% if solicitante.estado_aprobacion == 'PENDIENTE' %}
+<div class="notice">Tu solicitud está pendiente de revisión. Aún no puedes acceder al perfil, firmar ni arrendar maquinaria.</div><p>Cuando recibas una respuesta, vuelve a consultar esta pantalla.</p>
+{% elif solicitante.estado_aprobacion == 'RECHAZADO' %}
+<div class="notice"><strong>Motivo del rechazo</strong><p>{{ solicitante.motivo_revision|default:'No se registró un motivo. Contacta a la administración.'|linebreaksbr }}</p></div><p>Revisa los antecedentes y corrige los datos de tu empresa si corresponde. El reenvío requiere una nueva aprobación.</p>
+{% elif solicitante.estado_aprobacion == 'APROBADO' %}
+<div class="notice">Tu solicitud fue aprobada. Vuelve a ingresar con tu usuario y contraseña para acceder al sistema.</div><a class="btn btn-primary" href="{% url 'login' %}">Ingresar al sistema</a>
+{% endif %}</section>
+{% if solicitante.estado_aprobacion == 'RECHAZADO' %}
+<section class="card"><h2>Corregir y reenviar</h2><p class="muted">Si la empresa ya existe, su razón social y sus bloqueos se conservarán. El administrador debe verificar tu autorización.</p><form method="post" action="{% url 'reenviar_solicitud' %}">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Reenviar solicitud</button></form></section>
+{% endif %}
+<section class="card"><h2>Historial de mi solicitud</h2>{% include 'maquinaria/historial_solicitud.html' %}</section>
+{% endblock %}
+

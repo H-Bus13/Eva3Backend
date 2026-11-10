@@ -1,0 +1,5 @@
+{% extends 'maquinaria/base.html' %}
+{% block content %}{% include 'maquinaria/aviso_bloqueo_empresa.html' %}<section class="card"><h1>Bienvenido, {{ user.get_full_name|default:user.username }}</h1><p>Tu sesión está iniciada.</p>{% if perfil_contratista %}<p><a href="{% url 'perfil' %}">Completar condiciones y firma en mi perfil</a></p>{% endif %}{% if user.empresa %}<p>Empresa: {{ user.empresa }}</p>{% endif %}{% if perms.maquinaria.aprobar_contratista %}<a class="btn btn-primary" href="{% url 'pendientes' %}">Revisar solicitudes de contratistas</a>{% endif %}</section>{% endblock %}
+
+
+

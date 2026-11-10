@@ -1,0 +1,17 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Solicitud #{{ solicitud.pk }} · BuildCorp{% endblock %}
+{% block content %}<a href="{% url 'peticiones' %}">Volver a solicitudes</a><section class="card"><h1>Solicitud #{{ solicitud.pk }} · {{ solicitud.maquinaria }}</h1>
+<p>Estado: <strong>{% if vencida %}Reserva vencida{% else %}{{ solicitud.get_estado_display }}{% endif %}</strong></p>
+<p>Responsable: {{ solicitud.solicitante }} · Empresa: {{ solicitud.empresa }}</p>{% include 'maquinaria/destino_uso.html' with destino=solicitud %}
+<p>Precio acordado: <strong>${{ solicitud.precio_diario_acordado|floatformat:2 }} CLP/día</strong></p><p>Devolución: {{ solicitud.devolucion_prevista|date:'d/m/Y H:i' }}</p>{{ solicitud.observaciones|linebreaksbr }}
+{% if solicitud.reserva_hasta %}<p>Reserva hasta: {{ solicitud.reserva_hasta|date:'d/m/Y H:i' }}</p>{% endif %}
+{% if solicitud.motivo_revision %}<p>Motivo de revisión: {{ solicitud.motivo_revision }}</p>{% endif %}
+{% if solicitud.motivo_cancelacion %}<p>Motivo de cancelación: {{ solicitud.motivo_cancelacion }}</p>{% endif %}
+<h2>Condiciones firmadas · {{ solicitud.terminos.version }}</h2><div class="condiciones">{{ solicitud.terminos.contenido|linebreaksbr }}</div><p><a href="{% url 'firma_peticion' solicitud.pk %}" data-firma-preview>Ver firma privada de la solicitud</a></p>
+{% if solicitud.arriendo_id %}<a class="btn btn-primary" href="{% url 'detalle_arriendo' solicitud.arriendo_id %}">Ver arriendo entregado</a>{% endif %}
+{% if not vencida %}{% if solicitud.estado == 'PENDIENTE' or solicitud.estado == 'APROBADA' %}
+<form method="post">{% csrf_token %}{{ form.as_p }}{% if solicitud.estado == 'APROBADA' or solicitud.solicitante_id == user.pk %}<button class="btn btn-outline-danger" formaction="{% url 'operar_peticion' solicitud.pk 'cancelar' %}">Cancelar solicitud</button>{% endif %}
+{% if perms.maquinaria.gestionar_arriendos and solicitud.estado == 'PENDIENTE' %}<button class="btn btn-primary" formaction="{% url 'operar_peticion' solicitud.pk 'aprobar' %}">Aprobar y reservar</button><button class="btn btn-danger" formaction="{% url 'operar_peticion' solicitud.pk 'rechazar' %}">Rechazar</button>{% endif %}</form>
+{% if perms.maquinaria.gestionar_arriendos and solicitud.estado == 'APROBADA' %}<form method="post" action="{% url 'operar_peticion' solicitud.pk 'entregar' %}">{% csrf_token %}<label><input type="checkbox" name="confirmar" value="si" required> Preparar la entrega física al responsable</label><button class="btn btn-primary">Preparar entrega para firma</button></form>{% endif %}
+{% endif %}{% endif %}</section>
+<section class="card"><h2>Historial</h2>{% for evento in eventos %}<p>{{ evento.fecha|date:'d/m/Y H:i' }} · {{ evento.get_estado_nuevo_display }} · {{ evento.responsable|default:'Sistema' }} · {{ evento.motivo }}</p>{% empty %}<p>Sin eventos.</p>{% endfor %}</section>{% endblock %}

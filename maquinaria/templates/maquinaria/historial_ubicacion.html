@@ -1,0 +1,5 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}Historial de {{ ubicacion.nombre }} · BuildCorp{% endblock %}
+{% block content %}<p><a href="{% url 'ubicaciones' %}?estado=todas">Ver todas las ubicaciones</a></p><section class="card"><h1>Historial de {{ ubicacion.nombre }}</h1><p>Tipo: {{ tipo }} · Estado actual: <strong>{% if ubicacion.activa %}Activa{% else %}Inactiva{% endif %}</strong></p><p>{{ ubicacion.direccion|default:'Dirección sin registrar' }}</p>
+{% for evento in eventos %}<article class="evento"><h2>{{ evento.get_accion_display }} · {{ evento.fecha|date:'d/m/Y H:i' }}</h2><p>Responsable: {{ evento.responsable }}</p><p>{{ evento.motivo|linebreaksbr }}</p></article>{% empty %}<p>No hay desactivaciones ni reactivaciones registradas.</p>{% endfor %}</section>{% endblock %}
+

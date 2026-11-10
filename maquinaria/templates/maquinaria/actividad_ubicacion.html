@@ -1,0 +1,6 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}{{ titulo }} · BuildCorp{% endblock %}
+{% block content %}<section class="card form-card"><h1>{{ titulo }}</h1><div class="notice"><strong>{{ ubicacion.nombre }}</strong><p>{{ ubicacion.direccion|default:'Dirección sin registrar' }}</p><p>Estado actual: {% if ubicacion.activa %}Activa{% else %}Inactiva{% endif %}</p></div>
+{% if accion == 'desactivar' %}<p>La ubicación se retirará de las opciones para nuevas operaciones. Sus registros y antecedentes se conservarán.</p>{% if tipo == 'bodega' %}<p>Traslada primero los equipos que no estén dados de baja.</p>{% else %}<p>La obra no debe tener bodegas activas ni arriendos pendientes de devolución.</p>{% endif %}{% else %}<p>La ubicación volverá a estar habilitada. Esto no cambia el estado de sus máquinas.</p>{% if tipo == 'bodega' %}<p>Si está asociada a una obra, esa obra debe estar activa.</p>{% endif %}{% endif %}
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Confirmar operación</button></form><p><a href="{% url 'ubicaciones' %}">Cancelar y volver a ubicaciones</a></p></section>{% endblock %}
+

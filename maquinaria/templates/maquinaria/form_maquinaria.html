@@ -1,0 +1,4 @@
+{% extends 'maquinaria/base.html' %}
+{% block title %}{{ titulo }} · BuildCorp{% endblock %}
+{% block content %}<section class="card form-card"><h1>{{ titulo }}</h1>{% if es_alta %}<p>Registra las lecturas de horas antes de incorporar el equipo. Si desconoces la última mantención o se cumplieron 250 horas desde ella, quedará en mantenimiento para revisión.</p><p><a href="{% url 'ubicaciones' %}">Gestionar obras y bodegas</a></p>{% else %}<p>El código, las horas, el estado y la ubicación no se modifican desde esta pantalla.</p>{% endif %}<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Guardar maquinaria</button></form><p>{% if maquina %}<a href="{% url 'detalle_maquinaria' maquina.pk %}">Cancelar</a>{% else %}<a href="{% url 'catalogo' %}">Volver al catálogo</a>{% endif %}</p></section>{% endblock %}
+

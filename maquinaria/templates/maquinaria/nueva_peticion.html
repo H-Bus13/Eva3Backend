@@ -1,0 +1,24 @@
+{% extends 'maquinaria/base.html' %}
+{% load static %}
+{% block title %}Solicitar {{ maquina.nombre }} · BuildCorp{% endblock %}
+{% block content %}
+<section class="card form-card"><h1>Solicitar {{ maquina.nombre }}</h1>
+{% if maquina.precio_diario != None %}<p>Precio diario: <strong>${{ maquina.precio_diario|floatformat:2 }} CLP</strong>. No incluye pagos ni multas.</p>{% else %}<div class="alert alert-warning">La máquina no tiene tarifa. No puede solicitarse todavía.</div>{% endif %}
+<p>La solicitud no reserva el equipo hasta que el personal la apruebe. Antes de solicitar, debes tener aceptadas y firmadas las condiciones vigentes en <a href="{% url 'perfil' %}">tu perfil</a>.</p>
+{% if terminos and maquina.precio_diario != None %}<h2>Condiciones · {{ terminos.version }}</h2><div class="condiciones">{{ terminos.contenido|linebreaksbr }}</div>
+<form method="post" enctype="multipart/form-data" id="form-firma">{% csrf_token %}
+{{ form.non_field_errors }}{{ form.version_id }}{{ form.precio_visto }}{{ form.version_id.errors }}{{ form.precio_visto.errors }}
+<p>{{ form.direccion_uso.label_tag }}{{ form.direccion_uso }}{{ form.direccion_uso.errors }}</p>
+<p>{{ form.comuna_uso.label_tag }}{{ form.comuna_uso }}{{ form.comuna_uso.errors }}</p>
+<p>{{ form.indicaciones_acceso.label_tag }}{{ form.indicaciones_acceso }}{{ form.indicaciones_acceso.errors }}</p>
+<p>{{ form.devolucion_prevista.label_tag }}{{ form.devolucion_prevista }}{{ form.devolucion_prevista.errors }}</p>
+<p>{{ form.observaciones.label_tag }}{{ form.observaciones }}{{ form.observaciones.errors }}</p>
+<p>{{ form.acepto }} {{ form.acepto.label_tag }}{{ form.acepto.errors }}</p>
+<h2>Firma de la solicitud</h2><canvas id="firma" width="900" height="300" aria-label="Dibuja tu firma"></canvas>
+<input type="file" name="firma" id="archivo-firma" hidden>{{ form.firma.errors }}
+<div class="actions"><button type="button" id="limpiar-firma" class="btn btn-outline-secondary">Limpiar firma</button><button type="submit" id="guardar-firma" class="btn btn-primary">Firmar y enviar solicitud</button></div>
+<p id="error-firma" role="alert"></p><noscript>Habilita JavaScript para dibujar y adjuntar la firma.</noscript></form>
+<script src="{% static 'maquinaria/firma.js' %}" defer></script>
+{% elif not terminos %}<p>No hay condiciones publicadas todavía.</p>{% endif %}
+<a href="{% url 'catalogo' %}">Volver al catálogo</a></section>
+{% endblock %}
