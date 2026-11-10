@@ -236,3 +236,10 @@
 - La captura se trasladó a verificar_postgresql.py: combina stdout/stderr antes de PowerShell, muestra el progreso y conserva el código real de salida y el registro UTF-8. El stdin permanece conectado para las confirmaciones de Django.
 - probar_postgresql.ps1 sigue solicitando contraseña segura y restaurando PGPASSWORD; se guarda con BOM UTF-8 para que Windows PowerShell lea correctamente Contraseña.
 - Verificación ejecutada con Windows PowerShell 5.1 y ErrorActionPreference=Stop: progreso por stderr sin NativeCommandError, caracteres UTF-8 conservados y códigos 0/7 mantenidos. Sintaxis del script validada. No se repitió la suite de Django, pues no cambió el proyecto ni las pruebas; la ejecución anterior completa en PostgreSQL 18 pasó 320 pruebas.
+
+## 2026-11-10 — Consolidación de documentación para el repositorio
+
+- El estudiante autorizó reunir las instrucciones útiles y retirar los Markdown auxiliares, conservando README.md, prompts_ia.md y deploy/README.md.
+- README reescrito con instalación, roles, flujo vigente por dirección/comuna, firmas/reservas, mantenimiento, bloqueos, API, pruebas PostgreSQL y entrega/despliegue. Se retiraron referencias a documentos separados y cifras antiguas de verificación.
+- Se conservaron los 19 documentos auxiliares en un respaldo fuera del proyecto y se trasladaron sus originales fuera de la carpeta del repositorio, evitando su eliminación permanente. No se modificaron archivos de dependencias, código de la aplicación ni datos.
+- Verificación: quedan dos Markdown en la raíz más deploy/README.md; respaldo íntegro y enlaces relativos de las guías existentes. No se ejecutaron pruebas funcionales por tratarse solo de documentación.
