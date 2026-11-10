@@ -15,3 +15,9 @@ def horas(duracion):
 def hms(segundos):
     segundos = max(0, int(segundos or 0))
     return f"{segundos // 3600:02}:{segundos // 60 % 60:02}:{segundos % 60:02}"
+
+
+@register.filter
+def nombre_permiso(permiso):
+    from maquinaria.politica_usuarios import etiqueta_permiso
+    return etiqueta_permiso(permiso)

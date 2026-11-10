@@ -25,7 +25,7 @@ from maquinaria.forms_usuarios import (CrearUsuarioInternoForm, EditarDatosUsuar
                                       PermisosUsuarioForm, EstadoUsuarioForm)
 from maquinaria.servicios_usuarios import (exigir_administrador, crear_usuario_interno, editar_datos_usuario,
     cambiar_permisos_usuario, cambiar_estado_usuario)
-from maquinaria.politica_usuarios import permisos_otorgables, permisos_efectivos
+from maquinaria.politica_usuarios import permisos_otorgables, permisos_efectivos, datos_permisos
 from maquinaria.solicitudes import obtener_solicitante, iniciar_consulta_solicitud, CLAVE_CONSULTA
 from maquinaria.condiciones import obtener_terminos_vigentes, bloquear_publicacion, CLAVE_ACEPTACION
 from maquinaria.condiciones import es_contratista_firmante, exigir_contratista_firmante
@@ -115,7 +115,7 @@ class UsuarioViewSet(BaseCuentas):
     def permisos_disponibles(self, request, format=None):
         filtro = FiltroPaginaSerializer(data=request.query_params)
         filtro.is_valid(raise_exception=True)
-        return Response(list(permisos_otorgables(request.user).values("id", "codename", "name")))
+        return Response(datos_permisos(permisos_otorgables(request.user)))
 
     @action(detail=True, methods=["get", "post"])
     def permisos(self, request, pk=None, format=None):
@@ -125,7 +125,7 @@ class UsuarioViewSet(BaseCuentas):
             cambiar_permisos_usuario(usuario_id=destino.pk, datos=form.cleaned_data, actor=request.user)
             destino = self.get_queryset().get(pk=destino.pk)
         return Response({"usuario": destino.pk, "rol": destino.rol, "superusuario": destino.is_superuser,
-            "permisos": list(permisos_efectivos(destino).values("id", "codename", "name"))})
+            "permisos": datos_permisos(permisos_efectivos(destino))})
 
     def estado(self, request, activar):
         destino = self.get_object()

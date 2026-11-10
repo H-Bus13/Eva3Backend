@@ -398,7 +398,7 @@ class CondicionesFirmaTests(TestCase):
         self.assertEqual(self.client.get("/condiciones/publicar/").status_code, 403)
         self.assertEqual(self.client.post("/condiciones/publicar/", {"version": "2", "contenido": "Intruso"}).status_code, 403)
         self.client.force_login(self.admin)
-        self.assertContains(self.client.get("/condiciones/publicar/"), "Ejemplo académico")
+        self.assertNotContains(self.client.get("/condiciones/publicar/"), "Ejemplo académico")
         respuesta = self.client.post("/condiciones/publicar/", {"version": "2", "contenido": "Nuevo texto", "publicado_por": self.otro.pk})
         self.assertRedirects(respuesta, "/condiciones/publicar/")
         self.assertEqual(TerminosCondiciones.objects.get(version="2").publicado_por, self.admin)

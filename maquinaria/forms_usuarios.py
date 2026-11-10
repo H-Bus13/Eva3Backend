@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .forms import buscar_por_rut
 from .models import Empresa, Usuario
-from .politica_usuarios import permisos_efectivos, permisos_otorgables
+from .politica_usuarios import permisos_efectivos, permisos_otorgables, etiqueta_permiso
 from .validators import normalizar_rut
 
 
@@ -46,13 +46,18 @@ class EditarDatosUsuarioForm(forms.ModelForm):
         fields = ("first_name", "last_name", "email")
 
 
+class CampoPermisosEnEspanol(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, permiso):
+        return etiqueta_permiso(permiso)
+
+
 class PermisosUsuarioForm(forms.Form):
     rol = forms.ChoiceField(label="Rol interno", choices=ROLES_INTERNOS)
     motivo = forms.CharField(label="Motivo del cambio", max_length=1000, widget=forms.Textarea)
 
     def __init__(self, *args, actor, destino, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["permisos"] = forms.ModelMultipleChoiceField(
+        self.fields["permisos"] = CampoPermisosEnEspanol(
             label="Permisos funcionales", queryset=permisos_otorgables(actor),
             required=False, widget=forms.CheckboxSelectMultiple,
         )

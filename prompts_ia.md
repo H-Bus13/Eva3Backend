@@ -243,3 +243,17 @@
 - README reescrito con instalación, roles, flujo vigente por dirección/comuna, firmas/reservas, mantenimiento, bloqueos, API, pruebas PostgreSQL y entrega/despliegue. Se retiraron referencias a documentos separados y cifras antiguas de verificación.
 - Se conservaron los 19 documentos auxiliares en un respaldo fuera del proyecto y se trasladaron sus originales fuera de la carpeta del repositorio, evitando su eliminación permanente. No se modificaron archivos de dependencias, código de la aplicación ni datos.
 - Verificación: quedan dos Markdown en la raíz más deploy/README.md; respaldo íntegro y enlaces relativos de las guías existentes. No se ejecutaron pruebas funcionales por tratarse solo de documentación.
+
+## 2026-11-10 — Textos de condiciones y permisos en español
+
+- El estudiante pidió retirar el bloque Ejemplo académico para preparar el texto y unificar las descripciones de permisos.
+- Se retiró solo la ayuda del template de publicación; las versiones y aceptaciones existentes no se modifican.
+- Etiquetas centralizadas en español para permisos operativos, usadas en casillas del formulario, detalle de usuario y nombres devueltos por API. Se conservan códigos, IDs y autorizaciones. Se evita la etiqueta automática con prefijos técnicos del modelo.
+- 54 pruebas relacionadas de condiciones, administración y API de cuentas aprobadas en SQLite temporal; se ajustó la expectativa del texto retirado.
+- Actualización aplicada también en AWS con respaldo previo de siete archivos; comprobación Django, templates, 23 opciones operativas traducidas y acceso público HTTP 200. No requiere migraciones ni modificaciones de datos.
+- Los archivos actualizados están en el proyecto local y en el servidor; no se realizó commit ni push al repositorio GitHub.
+
+## 2026-11-10 — Publicación de las correcciones en GitHub
+
+- El estudiante autorizó guardar y subir las correcciones de condiciones y permisos al repositorio configurado.
+- Se revisaron los ocho archivos pendientes y se comprobó que no incluyen entornos, firmas, bases ni claves privadas. La rama local y origin/main estaban sincronizadas antes del commit.
